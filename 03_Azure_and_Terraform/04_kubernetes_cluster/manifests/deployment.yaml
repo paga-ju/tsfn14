@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-streaming
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: video-streaming
+  template:
+    metadata:
+      labels:
+        app: video-streaming
+    spec:
+      containers: 
+      - name: video-streaming
+        image: tsfn14g00.azurecr.io/video-streaming:1
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PORT
+          value: "4000"
+        resources:
+          requests:
+            cpu: 128m
+            memory: 128Mi
+          limits:
+            cpu: 256m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-streaming
+spec:
+  selector:
+    app: video-streaming
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 4000
