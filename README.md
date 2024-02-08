@@ -28,10 +28,6 @@ sudo rm Miniconda3-latest-Linux-x86_64.sh
 
 ## Create and activate conda environemnt
 
-- This also installs the Bash Jupyter kernel
-  - https://github.com/jupyter/jupyter/wiki/Jupyter-kernels
-  - https://note.nkmk.me/en/jupyter-notebook-kernels-bash
-
 ```bash
 conda create -y -p ./.conda python=3.10
 
@@ -39,9 +35,7 @@ conda activate ./.conda
 
 python -m pip install --upgrade pip
 
-pip install jupyter ipykernel bash_kernel
-
-python -m bash_kernel.install
+pip install jupyter ipykernel
 ```
 
 ## Install the rest of the environemnt
@@ -49,5 +43,5 @@ python -m bash_kernel.install
 - Open the notebook `install-environment.ipynb`.
 - In the notebook:
   - Click `Select Kernel` in the top right of the notebook.
-  - Select `Bash .conda/bin/python` to use the Bash kernel.
+  - Select `.conda (Python 3.10.13)` as the kernel.
 - Follow the instructions in the notebook.
