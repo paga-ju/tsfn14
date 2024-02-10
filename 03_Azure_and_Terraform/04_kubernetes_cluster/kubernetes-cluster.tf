@@ -4,22 +4,6 @@
 # - The value for "resource_group_name" below is set using property "name" in resource "azurerm_resource_group.main":
 #   - resource_group_name = azurerm_resource_group.main.name
 # - "name", "location" and "kubernetes_version" below are set from Terraform variables defined in the file "variables.tf".
-# Note 2!
-# - We also create a "networkwatcher" (in its own Resource Group).
-#   - This is required when a virtual network is created in Azure.
-#   - This is automatically created by Azure, but we explicitly create it here.
-#     - The only reason we do this explicitly is so Terraform Destroy will automatically delete it for us.
-
-resource "azurerm_resource_group" "networkwatcher" {
-  name     = "NetworkWatcherRG"
-  location = var.location
-}
-
-resource "azurerm_network_watcher" "networkwatcher" {
-  name                = "NetworkWatcher_westeurope"
-  location            = var.location
-  resource_group_name = azurerm_resource_group.networkwatcher.name
-}
 
 resource "azurerm_kubernetes_cluster" "main" {
   name                = var.app_name

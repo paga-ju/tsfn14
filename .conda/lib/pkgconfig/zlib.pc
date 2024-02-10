@@ -1,0 +1,13 @@
+prefix=/home/patrick/projects/tsfn14/.conda
+exec_prefix=/home/patrick/projects/tsfn14/.conda
+libdir=/home/patrick/projects/tsfn14/.conda/lib
+sharedlibdir=/home/patrick/projects/tsfn14/.conda/lib
+includedir=/home/patrick/projects/tsfn14/.conda/include
+
+Name: zlib
+Description: zlib compression library
+Version: 1.2.13
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}
