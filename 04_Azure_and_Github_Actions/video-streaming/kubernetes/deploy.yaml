@@ -1,0 +1,58 @@
+#
+# -This YAML  manifest file contains two kubernetes resources for the video-streaming microservice.
+#  - One Deployment, and one Service for the Deployment's Pods.
+#  - Notice how multiple resources can be defined in one YAML file by separating them with 3 dashes ---
+# 
+# Note!
+# The placeholders below have to be replaced before deploying the manifest to kubernetes:
+#   $CONTAINER_REGISTRY_LOGIN_SERVER
+#   $VERSION
+#
+# This can be done by creating environment variables in Linux as below:
+#   export CONTAINER_REGISTRY_LOGIN_SERVER=<your-container-registry>
+#   export VERSION=<the-version-to-deploy>
+#
+# Then replace the placeholders and deploy the manifest using the Linux command below:
+#   envsubst < ./scripts/kubernetes/deploy.yaml | kubectl apply -f -
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-streaming
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: video-streaming
+  template:
+    metadata:
+      labels:
+        app: video-streaming
+    spec:
+      containers: 
+      - name: video-streaming
+        image: $CONTAINER_REGISTRY_LOGIN_SERVER/video-streaming:$VERSION
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: PORT
+          value: "4000"
+        resources:
+          requests:
+            cpu: 126m
+            memory: 126Mi
+          limits:
+            cpu: 256m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: video-streaming
+spec:
+  selector:
+    app: video-streaming
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 4000
