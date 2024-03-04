@@ -1,0 +1,64 @@
+version: '3'
+services:
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always    
+    shm_size: 128mb
+    networks:
+    - loadtesting
+    environment:
+      POSTGRES_PASSWORD: postgres
+    volumes:
+    - ${PWD}/application/postgres/init.sh:/docker-entrypoint-initdb.d/init.sh
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    networks:
+    - loadtesting
+    ports:
+    - ${ADMINER_PORT}:${ADMINER_PORT}
+
+  client:
+    build:    
+      context: ./application/client
+      dockerfile: Dockerfile
+      args:
+        buildno: latest
+    container_name: client
+    networks:
+    - loadtesting
+    ports:
+     - ${CLIENT_PORT}:3000
+    environment:
+    - REACT_APP_SERVERURL=${REACT_APP_SERVERURL}
+    depends_on:
+    - server
+  
+  server:
+    build:    
+      context: ./application/server
+      dockerfile: Dockerfile
+      args:
+        buildno: latest
+    container_name: server
+    networks:
+    - loadtesting
+    ports:
+    - ${SERVER_PORT}:${SERVER_PORT}
+    environment:
+    - SERVER_PORT=${SERVER_PORT}
+    - USERNAME=${USERNAME}
+    - PASSWORD=${PASSWORD}
+    - HOST=${HOST}
+    - DBPORT=${DBPORT}
+    - DATABASE=${DATABASE}
+    depends_on:
+    - postgres
+
+networks:
+  loadtesting:
+    driver: bridge
